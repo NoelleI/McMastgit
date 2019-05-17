@@ -1,6 +1,6 @@
 ##Note that comments in this file are for pedagogical purposes
 ##the serious data cleaning appears around line 81
-##the first portion up to that point is a simple data load and 
+##the first portion up to that point is a simple data load and regression
 
 import os
 os.chdir("C:\\Users\\Admin\\AppData\\Local\\rodeo\\app-2.5.2\\resources\\conda\\Scripts")
