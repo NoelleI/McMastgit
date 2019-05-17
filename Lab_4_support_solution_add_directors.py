@@ -1,33 +1,38 @@
+##Note that comments in this file are for pedagogical purposes
+##the serious data cleaning appears around line 81
+##the first portion up to that point is a simple data load and 
+
 import os
 os.chdir("C:\\Users\\Admin\\AppData\\Local\\rodeo\\app-2.5.2\\resources\\conda\\Scripts")
-#this was for impoting libraries using pip on my computer
+#this was for importing libraries using pip on my computer
 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-%matplotlib inline
+#%matplotlib inline
 from sklearn.model_selection import train_test_split # to split the data into two parts
 import json 
 
-os.chdir("C:\\Users\\Admin\\Documents\\McMaster\\Week 3")
+#os.chdir("C:\\Users\\Admin\\Documents\\McMaster\\Week 3")
+os.chdir("C:\\Users\\Admin\\Documents\\McMaster\\McMastgit")
 #this is where the files are stored on my computer, change to equivalent drive on your computer
 
 
 file = 'tmdb_5000_movies.csv'
 file2 = 'tmdb_5000_credits.csv'
 
-
+#read in raw data
 
 df = pd.read_csv(file)
 df2 = pd.read_csv(file2)
-df_sub = df.iloc[:,:20]   #allows slicing of dataframe by index, get rid of empty columns
+df_sub = df.iloc[:,:20]   #iloc allows slicing of dataframe by index, get rid of empty columns
 df_sub2 = df2.iloc[:,:4]
 df_sub = pd.merge(df_sub, df_sub2)
 df_sub.head()
-#df_sub.fillna(value=0,inplace = True)#value can be changed as needed or data line can be removed - exclude here as 0 will skew data
+#df_sub.fillna(value=0,inplace = True)#value can be changed as needed or data line can be removed - exclude line if na here as 0 will skew data
 df_sub.isnull().any()
-#neither budget nor revenue have any missing values, so we will leave the data as is for this initial regression analysis
+#neither budget nor revenue have any missing values, so we will leave the data as is for this initial regression analysis, no exlcusions are necessary
 
 df_final = df_sub[['budget','revenue']]
 df_final.head()
@@ -73,7 +78,7 @@ print("Testing score: ",lin_score_test)
 
 
 #Continue the analysis with additional features extracted from the json data: 
-
+#this utility function extracts the data from the json file
 def get_data(column, df, key, credits=False, c= 'crew', role = 'Director'):
     df_temp = pd.DataFrame([])
     for i in column:
@@ -90,6 +95,7 @@ def get_data(column, df, key, credits=False, c= 'crew', role = 'Director'):
 df_final = get_data(df_sub["production_countries"], df_final, 'name')
 df_final.columns = ["budget","revenue", "First Listed Production Country"]
 
+df_final.head()
 
 #there are 71 different production companies noted. Many of them appear only once.
 #eliminate all countries with less than 100 appearances and create a category called "other"
@@ -117,7 +123,7 @@ df_final = pd.get_dummies(df_final, columns=["First Listed Production Country"])
 
 #train a new regression with the numerical dummies
 #fisrt split the data and arrange so that target and predictors are separated
-predictors = list(df_final.columns[0:1]) + list(df_final.columns[2:])
+predictors = list(df_final.columns[0:1]) + list(df_final.columns[2:]) ###the target column is in column 2
  
 train, test = train_test_split(df_final,test_size=0.30)
 X_train = train[predictors].dropna()
