@@ -79,7 +79,7 @@ print("Testing score: ",lin_score_test)
 
 #Continue the analysis with additional features extracted from the json data: 
 #this utility function extracts the data from the json file
-def get_data(column, df, key, credits=False, c= 'crew', role = 'Director'):
+def get_data(column, df, key):  #credits, c and role are not used
     df_temp = pd.DataFrame([])
     for i in column:
         json_data = json.loads(i)
@@ -115,9 +115,8 @@ def consolidate_infrequent_categories(column, count):
 
 df_final["First Listed Production Country"] = consolidate_infrequent_categories(df_final["First Listed Production Country"], country_count)
 
-drop_categories = []
-if len(df_final["First Listed Production Country"].value_counts()) >=2 :
-    drop_categories.append("First Listed Production Country_other")
+
+
 
 df_final = pd.get_dummies(df_final, columns=["First Listed Production Country"])
 
@@ -182,6 +181,8 @@ genre_count = 3000
 company_count = 3000
 df_final["First Listed Genre"] = consolidate_infrequent_categories(df_final["First Listed Genre"], genre_count)
 df_final["First Listed Production Company"] = consolidate_infrequent_categories(df_final["First Listed Production Company"], company_count)
+
+drop_categories = []
 
 if len(df_final["First Listed Production Company"].value_counts()) >=2:
     drop_categories.append("First Listed Production Company_other")
@@ -288,7 +289,6 @@ print("Note that for the categorical variables First Listed Production Company, 
 
 
 
-#Apply Recursive Feature Elimination see what we get compared to the above
 
 
 
